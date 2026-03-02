@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 271 91% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 270 30% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 292 84% 61%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 271 91% 65%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 271 91% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 270 30% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 271 91% 65%;
+
+    /* Homepage Gradient Theme */
+    --home-primary: #ff5757;
+    --home-secondary: #8c52ff;
+  }
+}
+
+.home-theme {
+  --primary-glow: rgba(255, 87, 87, 0.15);
+  --secondary-glow: rgba(140, 82, 255, 0.15);
+}
+
+.pb-theme {
+  --primary-glow: rgba(37, 99, 235, 0.15);
+}
+
+.bg-home-gradient {
+  background: linear-gradient(135deg, #ff5757 0%, #8c52ff 100%);
+}
+
+.bg-pb-solid {
+  background-color: #2563eb;
+}
+
+.text-home-gradient {
+  background: linear-gradient(135deg, #ff5757 0%, #8c52ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.text-pb-solid {
+  color: #2563eb;
+}
+
+.border-home-gradient {
+  border-image: linear-gradient(135deg, #ff5757 0%, #8c52ff 100%) 1;
+}
+
+.border-pb-solid {
+  border-color: #2563eb;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body {
+    @apply bg-slate-50 text-gray-900;
+    font-family: 'Poppins', sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Lexend', sans-serif;
+  }
+}
