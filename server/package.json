@@ -1,6 +1,9 @@
 {
   "name": "gradskills-buildathon-server",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "description": "Backend API for GradSkills Buildathon 2405",
   "main": "index.js",
   "scripts": {
