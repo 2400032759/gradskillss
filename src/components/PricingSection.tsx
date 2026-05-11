@@ -1,226 +1,259 @@
-import { CheckCircle2, ChevronRight, Zap } from "lucide-react";
+import { CheckCircle2, ArrowRight, Rocket, TerminalSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import { ApplicationFormModal } from "./ApplicationFormModal";
-import { Link } from "react-router-dom";
+import { ContainerScroll } from "./ui/container-scroll-animation";
+import DotGrid from "./DotGrid/DotGrid";
 
-const plans = [
-  {
-    name: "GradSkills Foundation",
-    price: "₹4,999",
-    unit: "Focus: Web Development",
-    outcome: "The starting step for serious builders",
-    badge: "",
-    featured: false,
-    features: [
-      "Master modern full-stack web foundations",
-      "Build complete web apps from scratch",
-      "Learn the full concepts of building and deploying a website",
-    ],
-    button: "Start Building",
-    href: "/foundational"
-  },
-  {
-    name: "GradSkills Elevate",
-    price: "₹7,499",
-    unit: "Focus: Web + App Development",
-    outcome: "For students ready to deploy multi-platform products",
-    badge: "",
-    featured: false,
-    features: [
-      "Everything in Foundation",
-      "Build cross-platform iOS & Android apps",
-      "Develop custom APIs and connect them with cloud and databases",
-      "Launch live products to real users",
-    ],
-    button: "Start Accelerating",
-    href: "/elevate"
-  },
-  {
-    name: "GradSkills Product Builder",
-    price: "₹9,999",
-    unit: "Focus: Web + App + AI Agents",
-    outcome: "The elite, career-defining path",
-    badge: "Flagship",
-    featured: true,
-    features: [
-      "Everything in Elevate",
-      "Learn how to build Functional AI agent workflows",
-      "Develop 3-4 real deployed projects (1 website,1 app,2 AI agents)",
-      "Build a career-defining tech portfolio",
-    ],
-    button: "Become a Product Builder",
-    href: "/product-builder"
-  },
-];
-
-const getThemeStyles = (planName: string, theme: string) => {
-  const isHome = theme === "home";
-  const isPB = theme === "product-builder";
-
-  if (planName === "GradSkills Product Builder") {
-    return {
-      card: `bg-white border-2 ${isHome || isPB ? "border-[#2563EB]/20" : "border-blue-200"} shadow-md z-20 hover:-translate-y-3 hover:shadow-lg`,
-      topStroke: "bg-[#2563EB]",
-      badge: "bg-[#2563EB] text-white",
-      title: "text-[#2563EB]",
-      zap: "text-[#2563EB] fill-[#2563EB]",
-      price: "text-gray-900",
-      outcome: "text-gray-700",
-      listItem: "text-gray-900",
-      check: "text-[#2563EB]",
-      button: "bg-[#2563EB] text-white shadow-md hover:bg-blue-700 hover:shadow-lg",
-      chevron: "text-white"
-    };
-  }
-  if (planName === "GradSkills Elevate") {
-    return {
-      card: "bg-white border-2 border-orange-300 shadow-md z-10 hover:-translate-y-2 hover:shadow-lg",
-      topStroke: "bg-orange-500",
-      badge: "bg-orange-500 text-white", // Just in case it ever gets a badge
-      title: "text-orange-500",
-      zap: "text-orange-500 fill-orange-500",
-      price: "text-gray-900",
-      outcome: "text-gray-700",
-      listItem: "text-gray-900", // make it pop
-      check: "text-orange-500",
-      button: "bg-orange-500 text-white shadow-md hover:bg-orange-600 hover:shadow-lg",
-      chevron: "text-white"
-    };
-  }
-  // Foundation (or default)
-  return {
-    card: "bg-white border-2 border-purple-200 shadow-sm hover:shadow-md hover:-translate-y-2 z-10",
-    topStroke: "bg-purple-600",
-    badge: "bg-purple-600 text-white", // Style in case it becomes current program
-    title: "text-purple-600",
-    zap: "",
-    price: "text-gray-900",
-    outcome: "text-gray-600",
-    listItem: "text-gray-600",
-    check: "text-purple-500",
-    button: "bg-purple-600 text-white shadow-sm hover:bg-purple-700 hover:shadow-md",
-    chevron: "text-white"
-  };
+const productBuilder = {
+  name: "AI Powered Product Builder",
+  duration: "12 WEEKS",
+  icon: Rocket,
+  unit: "Focus: Web + App + AI Agents",
+  outcome: "The elite, career-defining path",
+  badge: "AI PRODUCT BUILDER",
+  features: [
+    "Live website deployed",
+    "Cross-platform mobile app",
+    "Two intelligent AI agents",
+    "Portfolio + certification",
+  ],
+  button: "Become a Product Builder",
 };
 
-export default function PricingSection({ currentPlan, theme = "default" }: { currentPlan?: string, theme?: string }) {
-  const isHome = theme === "home";
+export default function PricingSection({ theme = "dark" }: { theme?: "dark" | "light" | string }) {
+  const isDark = theme === "dark" || theme === "default" || theme === "home";
+
   return (
-    <section id="pricing" className="relative w-full bg-slate-50 text-gray-900 px-6 py-24 lg:py-32 font-sans overflow-hidden border-b border-gray-100">
+    <section id="programs" className={`relative w-full transition-colors duration-1000 ${isDark ? "bg-transparent text-white" : "bg-white text-slate-900"} px-6 font-sans overflow-visible`}>
+      {/* Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className={`absolute top-1/4 -right-1/4 w-[600px] h-[600px] bg-home-gradient opacity-[0.07] blur-[120px] rounded-full transition-opacity ${!isDark && "opacity-[0.04]"}`} />
+        <div className={`absolute bottom-1/4 -left-1/4 w-[600px] h-[600px] bg-home-gradient opacity-[0.07] blur-[120px] rounded-full transition-opacity ${!isDark && "opacity-[0.04]"}`} />
 
-      <div className="relative z-10 mx-auto max-w-[1300px]">
+        {/* Interactive Dot Grid Pattern - Standardized Visibility */}
+        <div className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 opacity-80">
+          <DotGrid
+            baseColor={isDark ? "#1e293b" : "#e2e8f0"}
+            activeColor="#8c52ff"
+            dotSize={3}
+            gap={30}
+          />
+        </div>
+      </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-          className="mb-24 text-center max-w-3xl mx-auto"
+      <div className="relative z-10 mx-auto max-w-[1400px]">
+        <ContainerScroll
+          titleComponent={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-8 text-center max-w-3xl mx-auto"
+            >
+              <div className={`mb-8 inline-flex items-center gap-2 rounded-full border px-6 py-2.5 text-[12px] font-semibold uppercase tracking-[0.2em] shadow-2xl backdrop-blur-md transition-colors ${isDark ? "border-white/10 bg-white/5 text-white/80" : "border-slate-200 bg-slate-50 text-slate-500"}`}>
+                <TerminalSquare className="w-4 h-4 text-home-gradient" /> The Flagship Program
+              </div>
+              <h2 className={`mb-8 text-[40px] font-bold tracking-tight sm:text-[56px] lg:text-[72px] leading-[1.2] font-['Fira_Sans'] transition-colors ${isDark ? "text-white" : "text-slate-900"}`}>
+                A Structured Path to <span className="relative inline-block text-home-gradient">
+                  Build
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "100%" }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+                    className="absolute -bottom-2 left-0 h-[4px] bg-home-gradient rounded-full"
+                  />
+                </span> <span className="text-home-gradient">Real Products.</span>
+              </h2>
+              <p className={`text-[18px] lg:text-[20px] font-medium max-w-2xl mx-auto leading-relaxed transition-colors ${isDark ? "text-white/60" : "text-slate-500"}`}>
+                Stop practicing. Start building. The elite, career-defining path for the next generation of product engineers.
+              </p>
+            </motion.div>
+          }
         >
-          <div className={`mb-6 inline-flex items-center gap-2 rounded-full border ${isHome ? "border-[#ff5757]/20 bg-[#ff5757]/10 text-[#ff5757]" :
-            theme === "product-builder" ? "border-[#2563EB]/20 bg-[#2563EB]/10 text-[#2563EB]" :
-              theme === "orange" ? "border-[#EA580C]/20 bg-[#EA580C]/10 text-[#EA580C]" :
-                theme === "purple" ? "border-[#9333EA]/20 bg-[#9333EA]/10 text-[#9333EA]" :
-                  "border-blue-100 bg-blue-50 text-blue-800"
-            } px-5 py-2 text-[11px] font-bold uppercase tracking-widest`}>
-            Choose Your Path
-          </div>
-          <h2 className="mb-6 text-[36px] font-black tracking-tight sm:text-[48px] lg:text-[60px] leading-[1.05] text-gray-900">
-            Invest in Your <br className="hidden md:block" />
-            <span className={isHome ? "text-home-gradient" :
-              theme === "product-builder" ? "text-[#2563EB]" :
-                theme === "orange" ? "text-[#EA580C]" :
-                  theme === "purple" ? "text-[#9333EA]" :
-                    "text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-blue-600"}>
-              Tech Career.
-            </span>
-          </h2>
-          <p className="mx-auto max-w-2xl text-[18px] text-gray-600 leading-relaxed font-medium">
-            Stop practicing. Start building. Choose the program that aligns with your ultimate career goals. We don't sell courses; we build product engineers.
-          </p>
-        </motion.div>
+          <div className="relative h-full w-full overflow-hidden">
+            {/* Glowing Border Effect */}
+            <div className="absolute -inset-[1px] bg-gradient-to-r from-transparent via-home-gradient to-transparent rounded-[2rem] opacity-30 blur-sm" />
+            <div className="absolute -inset-[1px] bg-gradient-to-r from-transparent via-home-gradient to-transparent rounded-3xl opacity-30 blur-sm" />
 
-        {/* Dynamic Bento Box Pricing Grid */}
-        <div className="grid gap-6 md:grid-cols-3 items-center max-w-[1200px] mx-auto group perspective-1000">
+            <div className={`relative h-full overflow-hidden border rounded-3xl backdrop-blur-xl shadow-2xl transition-colors ${isDark ? "bg-white/5 border-white/10" : "bg-slate-50 border-slate-200"}`}>
+              <div className="h-full w-full">
+                {/* --- PREMIUM MOBILE LAYOUT (App-style) --- */}
+                <div className="lg:hidden flex flex-col h-full p-0">
+                  {/* Header Area */}
+                  <div className="relative bg-home-gradient p-8 pb-12 rounded-3xl overflow-hidden text-white shadow-lg">
+                    {/* Background Pattern */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+                    
+                    <div className="relative z-10">
+                      <div className="flex justify-between items-center mb-6">
+                        <span className="bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] shadow-sm">
+                          {productBuilder.badge}
+                        </span>
+                        <div className="flex flex-col items-end">
+                           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-0.5">Duration</span>
+                           <span className="text-[12px] font-bold">{productBuilder.duration}</span>
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-[28px] font-bold leading-[1.1] mb-2 tracking-tight">
+                        {productBuilder.name}
+                      </h3>
+                      <p className="text-white/70 text-[13px] font-medium mb-6">
+                        {productBuilder.unit}
+                      </p>
 
-          {plans.map((plan, i) => {
-            const styles = getThemeStyles(plan.name, theme);
-            const isFeaturedSize = plan.name === "GradSkills Product Builder";
-            const showZap = plan.name === "GradSkills Product Builder";
+                      <div className="flex items-center gap-2 text-[14px] font-bold text-white italic">
+                         <Rocket className="w-5 h-5 text-white animate-bounce" />
+                         {productBuilder.outcome}
+                      </div>
+                    </div>
 
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: isFeaturedSize ? 1.05 : 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}
-                className={`relative rounded-[24px] flex flex-col h-full overflow-hidden transition-all duration-300 ease-out ${styles.card}`}
-              >
-                {styles.topStroke && (
-                  <div className={`absolute top-0 inset-x-0 h-[3px] ${styles.topStroke}`} />
-                )}
-                {(currentPlan === plan.name || plan.badge) && (
-                  <div className={`absolute top-0 left-1/2 -translate-x-1/2 text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-b-xl shadow-sm ${styles.badge}`}>
-                    {currentPlan === plan.name ? "Current Program" : plan.badge}
-                  </div>
-                )}
-
-                <div className="p-8 lg:p-10 flex flex-col h-full z-10">
-                  <div className={`flex items-center justify-between mb-6 ${isFeaturedSize ? 'mt-4' : ''}`}>
-                    <h3 className={`text-[13px] font-bold uppercase tracking-widest ${styles.title}`}>{plan.name}</h3>
-                    {showZap && <Zap className={`w-5 h-5 ${styles.zap}`} />}
+                    {/* Faded Large Icon */}
+                    <productBuilder.icon className="absolute -right-6 bottom-0 w-36 h-36 text-white/10 -rotate-12 translate-y-6" />
                   </div>
 
-                  <div className="mb-8 border-b border-gray-100 pb-8">
-                    <span className={`font-black tracking-tighter leading-none ${isFeaturedSize ? 'text-[56px]' : 'text-[48px]'} ${styles.price}`}>
-                      {plan.price}
-                    </span>
-                    <span className="block mt-3 text-[13px] font-bold text-gray-500 uppercase tracking-widest">
-                      {plan.unit}
-                    </span>
-                    <div className={`mt-5 text-[15px] font-medium leading-relaxed ${styles.outcome}`}>
-                      {plan.outcome}
+                  {/* Body Area */}
+                  <div className="p-8 pt-6 flex flex-col h-full">
+                    <motion.div 
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true }}
+                      variants={{
+                        visible: { transition: { staggerChildren: 0.15 } }
+                      }}
+                      className="grid grid-cols-1 gap-5 mb-10"
+                    >
+                      {productBuilder.features.map((f, j) => (
+                        <motion.div 
+                          key={j} 
+                          variants={{
+                            hidden: { opacity: 0, x: -10 },
+                            visible: { opacity: 1, x: 0 }
+                          }}
+                          className="flex items-center gap-4 group"
+                        >
+                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm border ${isDark ? "bg-white/5 border-white/10" : "bg-slate-50 border-slate-200"}`}>
+                            <motion.div
+                              initial={{ scale: 0, rotate: -20 }}
+                              whileInView={{ scale: 1, rotate: 0 }}
+                              transition={{ 
+                                type: "spring", 
+                                stiffness: 400, 
+                                damping: 10,
+                                delay: 0.3 + (j * 0.15) 
+                              }}
+                            >
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                            </motion.div>
+                          </div>
+                          <span className={`text-[15px] font-semibold transition-colors ${isDark ? "text-white/80" : "text-slate-600"} leading-tight`}>
+                            {f}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+
+                    <div className="mt-auto space-y-6">
+                      {/* Status Info */}
+                      <div className={`flex items-center justify-center gap-4 p-4 rounded-xl border border-dashed transition-colors ${isDark ? "bg-white/[0.02] border-white/10" : "bg-slate-50 border-slate-200"}`}>
+                        <div className="flex flex-col items-center">
+                          <div className={`text-[9px] font-bold uppercase tracking-[0.3em] mb-1 transition-colors ${isDark ? "text-white/30" : "text-slate-400"}`}>Status</div>
+                          <div className={`text-[14px] font-bold uppercase tracking-widest transition-colors ${isDark ? "text-white" : "text-slate-900"}`}>Enrolling Now</div>
+                        </div>
+                      </div>
+
+                      <ApplicationFormModal>
+                        <button className="w-full group flex items-center justify-center gap-3 bg-home-gradient text-white px-8 py-5 rounded-xl font-bold text-[17px] transition-all shadow-xl hover:opacity-90 active:scale-95">
+                          {productBuilder.button} <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
+                        </button>
+                      </ApplicationFormModal>
                     </div>
                   </div>
+                </div>
 
-                  <ul className="mb-10 space-y-4 flex-grow">
-                    {plan.features.map((f, j) => (
-                      <li key={j} className={`flex items-start gap-4 text-[15px] font-medium leading-snug tracking-tight ${styles.listItem}`}>
-                        <CheckCircle2 className={`mt-[2px] h-[18px] w-[18px] shrink-0 ${styles.check}`} />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
+                {/* --- ORIGINAL DESKTOP LAYOUT --- */}
+                <div className="hidden lg:flex flex-row items-center gap-16 p-12 h-full">
+                  <div className="flex-1 text-left">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="px-5 py-2 rounded-full text-[12px] font-bold uppercase tracking-[0.2em] bg-home-gradient text-white shadow-lg">
+                        {productBuilder.name}
+                      </div>
+                      <div className={`text-[14px] font-semibold uppercase tracking-widest transition-colors ${isDark ? "text-white/60" : "text-slate-400"}`}>
+                        {productBuilder.duration}
+                      </div>
+                    </div>
 
-                  <div className="mt-auto w-full">
-                    <Link to={plan.href}>
-                      <button className={`w-full rounded-xl py-4 px-6 font-bold text-[15px] transition-all duration-300 flex items-center justify-between group/btn ${styles.button}`}>
-                        {plan.button}
-                        <ChevronRight className={`w-5 h-5 transition-transform duration-300 group-hover/btn:translate-x-1.5 ${styles.chevron}`} />
+                    <h3 className={`mb-6 text-[40px] font-bold leading-[1.2] font-['Fira_Sans'] transition-colors ${isDark ? "text-white" : "text-slate-900"}`}>
+                      {productBuilder.outcome}
+                    </h3>
+
+                    <motion.div 
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true }}
+                      variants={{
+                        visible: { transition: { staggerChildren: 0.1 } }
+                      }}
+                      className="grid sm:grid-cols-2 gap-4 mb-10"
+                    >
+                      {productBuilder.features.map((f, j) => (
+                        <motion.div 
+                          key={j} 
+                          variants={{
+                            hidden: { opacity: 0, x: -20 },
+                            visible: { opacity: 1, x: 0 }
+                          }}
+                          className="flex items-start gap-4 group"
+                        >
+                          <div className="w-6 h-6 rounded-full bg-home-gradient/20 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 mt-0.5">
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              whileInView={{ scale: 1 }}
+                              transition={{ 
+                                type: "spring", 
+                                stiffness: 500, 
+                                damping: 15,
+                                delay: 0.5 + (j * 0.1) 
+                              }}
+                            >
+                              <CheckCircle2 className={`w-3.5 h-3.5 transition-colors ${isDark ? "text-emerald-400" : "text-emerald-500"}`} />
+                            </motion.div>
+                          </div>
+                          <span className={`text-[17px] font-medium transition-colors ${isDark ? "text-white/80" : "text-slate-600"} leading-tight`}>
+                            {f}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+
+                    <ApplicationFormModal>
+                      <button className="w-full sm:w-auto group flex items-center justify-center gap-3 bg-home-gradient text-white px-10 py-5 rounded-xl font-bold text-[18px] transition-all shadow-[0_0_20px_rgba(255,87,87,0.2)] hover:shadow-[0_0_40px_rgba(140,82,255,0.4)] hover:-translate-y-1">
+                        {productBuilder.button} <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
                       </button>
-                    </Link>
+                    </ApplicationFormModal>
+                  </div>
+
+                  <div className="lg:w-[320px] shrink-0">
+                    <div className="relative aspect-square w-full lg:max-w-none mx-auto">
+                      <div className="absolute inset-0 bg-home-gradient opacity-20 blur-[60px] rounded-full animate-pulse" />
+                      <div className={`relative h-full w-full border rounded-[2.5rem] flex flex-col items-center justify-center backdrop-blur-md shadow-inner transition-colors ${isDark ? "bg-white/5 border-white/10" : "bg-white border-slate-200"}`}>
+                        <productBuilder.icon className={`w-20 h-20 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-colors ${isDark ? "text-white" : "text-slate-900"}`} />
+                        <div className="mt-6 text-center">
+                          <div className={`text-[11px] font-semibold uppercase tracking-[0.3em] mb-1 transition-colors ${isDark ? "text-white/60" : "text-slate-400"}`}>Status</div>
+                          <div className={`text-[16px] font-bold uppercase tracking-widest transition-colors ${isDark ? "text-white" : "text-slate-900"}`}>Enrolling Now</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </motion.div>
-            )
-          })}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-20 text-center relative z-20"
-        >
-          <h3 className="text-[24px] sm:text-[32px] font-black text-gray-900 mb-8">
-            Your career shouldn't wait. Build your future today.
-          </h3>
-          <ApplicationFormModal>
-            <button className={`inline-flex items-center justify-center gap-3 ${isHome ? "bg-home-gradient" :
-                theme === "product-builder" ? "bg-[#2563EB]" :
-                  theme === "orange" ? "bg-[#EA580C]" :
-                    theme === "purple" ? "bg-[#9333EA]" :
-                      "bg-blue-800"
-              } text-white px-10 py-5 rounded-xl font-bold text-[18px] transition-all shadow-md hover:opacity-90 hover:shadow-lg hover:-translate-y-1`}>
-              Apply for the Next Cohort
-            </button>
-          </ApplicationFormModal>
-        </motion.div>
-
+              </div>
+            </div>
+          </div>
+        </ContainerScroll>
       </div>
     </section>
   );
 }
+

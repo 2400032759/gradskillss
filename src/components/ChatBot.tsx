@@ -87,7 +87,7 @@ export default function ChatBot({ theme = "default" }: { theme?: string }) {
                         style={{ maxHeight: "500px", height: "calc(100vh - 120px)" }}
                     >
                         {/* Header */}
-                        <div className={`${isHome ? "bg-home-gradient" :
+                        <div className={`${isHome || theme === "dark" || theme === "light" ? "bg-home-gradient" :
                             theme === "product-builder" ? "bg-[#2563EB]" :
                                 theme === "orange" ? "bg-[#EA580C]" :
                                     theme === "purple" ? "bg-[#9333EA]" :
@@ -128,7 +128,7 @@ export default function ChatBot({ theme = "default" }: { theme?: string }) {
                                 >
                                     <div
                                         className={`relative px-4 py-3 rounded-2xl text-[14px] leading-relaxed shadow-sm ${msg.sender === "user"
-                                            ? `${isHome ? "bg-home-gradient" :
+                                            ? `${isHome || theme === "dark" || theme === "light" ? "bg-home-gradient" :
                                                 theme === "product-builder" ? "bg-[#2563EB]" :
                                                     theme === "orange" ? "bg-[#EA580C]" :
                                                         theme === "purple" ? "bg-[#9333EA]" :
@@ -160,7 +160,7 @@ export default function ChatBot({ theme = "default" }: { theme?: string }) {
                             <button
                                 onClick={handleSend}
                                 className={`w-12 h-12 flex items-center justify-center rounded-full shrink-0 transition-colors ${inputValue.trim()
-                                    ? `${isHome ? "bg-home-gradient" :
+                                    ? `${isHome || theme === "dark" || theme === "light" ? "bg-home-gradient" :
                                         theme === "product-builder" ? "bg-[#2563EB]" :
                                             theme === "orange" ? "bg-[#EA580C]" :
                                                 theme === "purple" ? "bg-[#9333EA]" :
@@ -180,7 +180,7 @@ export default function ChatBot({ theme = "default" }: { theme?: string }) {
             {/* Toggle Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-16 h-16 ${isHome ? "bg-home-gradient" :
+                className={`w-16 h-16 ${isHome || theme === "dark" || theme === "light" ? "bg-home-gradient" :
                     theme === "product-builder" ? "bg-[#2563EB]" :
                         theme === "orange" ? "bg-[#EA580C]" :
                             theme === "purple" ? "bg-[#9333EA]" :

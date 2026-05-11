@@ -1,113 +1,170 @@
-import { motion } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 import { Code2, Rocket, ArrowRight, XCircle, CheckCircle } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import DotGrid from "./DotGrid/DotGrid";
+import { ApplicationFormModal } from "./ApplicationFormModal";
 
-export default function GapSection({ theme = "default" }: { theme?: string }) {
-  const isHome = theme === "home";
+export default function GapSection({ theme = "dark" }: { theme?: "dark" | "light" | string }) {
+  const isDark = theme === "dark" || theme === "default" || theme === "home";
+  const containerRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Parallax offsets for mobile
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 60]);
 
   return (
-    <section id="gap" className="relative w-full bg-white text-gray-900 px-6 py-24 lg:py-32 font-sans overflow-hidden border-b border-gray-100">
+    <section 
+      id="gap" 
+      ref={containerRef}
+      className={`relative w-full transition-colors duration-1000 ${isDark ? "bg-transparent text-white" : "bg-white text-slate-900"} px-6 py-24 lg:py-32 font-sans overflow-hidden border-b ${isDark ? "border-white/5" : "border-slate-200"}`}
+    >
+      {/* Background Ambient Glows */}
+      <div className={`absolute top-1/4 -left-20 w-[400px] h-[400px] bg-[#ff5757]/10 blur-[120px] rounded-full pointer-events-none transition-opacity ${!isDark && "opacity-40"}`} />
+      <div className={`absolute bottom-1/4 -right-20 w-[400px] h-[400px] bg-[#8c52ff]/10 blur-[120px] rounded-full pointer-events-none transition-opacity ${!isDark && "opacity-40"}`} />
+
+      {/* Interactive Dot Grid Pattern - Standardized Visibility */}
+      <div className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 opacity-80">
+          <DotGrid 
+              baseColor={isDark ? "#1e293b" : "#e2e8f0"}
+              activeColor="#8c52ff"
+              dotSize={3}
+              gap={30}
+          />
+      </div>
 
       <div className="relative z-10 mx-auto max-w-[1300px]">
-
         {/* Aggressive Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-          className="mb-20 max-w-4xl mx-auto text-center"
-        >
-          <div className={`mb-6 inline-flex items-center gap-2 rounded-full border ${isHome ? "border-[#ff5757]/20 bg-[#ff5757]/10 text-[#ff5757]" : "border-blue-100 bg-blue-50 text-blue-800"} px-5 py-2 text-[11px] font-bold uppercase tracking-widest shadow-sm`}>
-            The Industry Reality
+        <div className="mb-24 max-w-4xl mx-auto text-center">
+          <div className={`mb-6 inline-flex items-center gap-2 rounded-full border px-6 py-2 text-[12px] font-semibold uppercase tracking-[0.2em] shadow-sm transition-colors ${isDark ? "border-white/10 bg-white/5 text-white/50" : "border-slate-200 bg-slate-50 text-slate-400"}`}>
+            The Industry Problem
           </div>
-          <h2 className="mb-6 text-[36px] font-black tracking-tight sm:text-[48px] lg:text-[60px] leading-[1.05] text-gray-900">
-            While others solve <span className="text-gray-400 font-medium line-through decoration-red-500/50">problems</span>,<br className="hidden lg:block" />
-            we <span className={`${isHome ? "text-home-gradient" : "text-blue-800"}`}>make you build real apps, websites and AI agents</span>.
+          <h2 className={`mb-8 text-[42px] sm:text-[60px] lg:text-[56px] xl:text-[64px] font-bold leading-[1.05] tracking-tight transition-colors ${isDark ? "text-white" : "text-slate-900"}`}>
+            Colleges Teach Theory.<br className="hidden lg:block" />
+            <span className="text-home-gradient">Industries Need Builders.</span>
           </h2>
-          <p className="mx-auto max-w-2xl text-[18px] sm:text-[20px] text-gray-600 leading-relaxed font-medium">
-            Coding puzzles are good for practice. But launching working applications is what actually starts a <strong className="text-gray-900">career</strong>.
+          <p className={`mx-auto max-w-4xl text-[18px] sm:text-[22px] leading-relaxed font-medium transition-colors ${isDark ? "text-white/50" : "text-slate-500"}`}>
+            Degrees prove attendance. Products prove competence. <br className="hidden lg:block" />
+            We build the proof.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Bento Box Split Comparison */}
-        <div className="grid lg:grid-cols-2 gap-8 w-full max-w-[1100px] mx-auto group">
+        {/* Comparison Dashboard */}
+        <div className="relative grid lg:grid-cols-2 gap-12 w-full max-w-[1150px] mx-auto items-stretch">
+          
+          {/* VS Badge (Desktop) */}
+          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden lg:flex w-16 h-16 rounded-full border items-center justify-center shadow-2xl overflow-hidden group transition-colors ${isDark ? "bg-[#030712] border-white/10" : "bg-white border-slate-200"}`}>
+            <span className={`relative text-[14px] font-bold tracking-tighter italic transition-colors ${isDark ? "text-white/40" : "text-slate-300"}`}>VS</span>
+          </div>
 
-          {/* Default Path (Red / Muted Variant) */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.1 }}
-            className="flex flex-col bg-gray-50 border border-gray-200 rounded-[32px] overflow-hidden group-hover:opacity-80 hover:!opacity-100 transition-opacity duration-300 shadow-sm"
+          {/* Default Path */}
+          <div
+            className={`flex flex-col border rounded-3xl overflow-hidden transition-all duration-700 backdrop-blur-xl group ${isDark ? "bg-white/[0.02] border-white/5 hover:border-white/10" : "bg-slate-50 border-slate-200 hover:border-slate-300 hover:bg-white"}`}
           >
-            <div className="p-8 pb-0 flex items-center justify-between">
-              <div>
-                <h3 className="text-[14px] font-bold uppercase tracking-widest text-red-600 mb-2">The Default Path</h3>
-                <h4 className="text-[28px] font-bold text-gray-900">DSA Solver</h4>
+            <div className="p-10 pb-0">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h3 className={`text-[12px] font-bold uppercase tracking-[0.2em] mb-3 transition-colors ${isDark ? "text-white/30" : "text-slate-400"}`}>The College Path</h3>
+                  <h4 className={`text-[32px] font-bold tracking-tight leading-tight transition-colors ${isDark ? "text-white/90" : "text-slate-800"}`}>Theoretical Knowledge</h4>
+                </div>
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center border transition-all duration-500 ${isDark ? "bg-white/[0.03] border-white/5 group-hover:border-rose-500/20" : "bg-white border-slate-200 group-hover:border-rose-200"}`}>
+                  <Code2 className={`h-7 w-7 transition-colors ${isDark ? "text-white/20 group-hover:text-rose-500/50" : "text-slate-300 group-hover:text-rose-500"}`} />
+                </div>
               </div>
-              <div className="w-14 h-14 rounded-2xl bg-red-50 flex flex-col items-center justify-center border border-red-100">
-                <Code2 className="h-6 w-6 text-red-500" />
+
+              <div className="space-y-8 mb-12">
+                {[
+                  { title: "Syntax vs Software", text: "You learn how to write code, but not how to build a software product." },
+                  { title: "Generic Projects", text: "Resume full of cookie-cutter projects that don't impress recruiters." },
+                  { title: "No Deployment", text: "Code stays on your laptop. It never reaches a live user." }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-5 group/item">
+                    <div className="mt-1 w-6 h-6 shrink-0 rounded-full bg-rose-500/10 flex items-center justify-center border border-rose-500/20">
+                      <XCircle className="w-4 h-4 text-rose-500/60" />
+                    </div>
+                    <div>
+                      <p className={`text-[16px] transition-colors leading-relaxed ${isDark ? "text-white/40 group-hover/item:text-white/60" : "text-slate-500 group-hover/item:text-slate-700"}`}>
+                        <strong className={`block mb-1 transition-colors ${isDark ? "text-white/70" : "text-slate-900"}`}>{item.title}</strong> {item.text}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-
-            <div className="p-8 flex-grow flex flex-col justify-start">
-              <ul className="flex flex-col gap-6">
-                <li className="flex gap-4 text-gray-600 font-medium text-[16px]">
-                  <XCircle className="w-6 h-6 shrink-0 text-red-500" />
-                  <span>Spends months practicing basic coding problems.</span>
-                </li>
-                <li className="flex gap-4 text-gray-600 font-medium text-[16px]">
-                  <XCircle className="w-6 h-6 shrink-0 text-red-500" />
-                  <span>Knows code syntax, but struggles to build a full app.</span>
-                </li>
-                <li className="flex gap-4 text-gray-600 font-medium text-[16px]">
-                  <XCircle className="w-6 h-6 shrink-0 text-red-500" />
-                  <span>Has no completed projects to show employers.</span>
-                </li>
-              </ul>
+            
+            <div className={`mt-auto p-10 border-t transition-colors ${isDark ? "bg-white/[0.01] border-white/5" : "bg-white border-slate-100"}`}>
+               <div className={`flex items-start gap-4 italic text-[15px] transition-colors ${isDark ? "text-white/30" : "text-slate-400"}`}>
+                 <span className={`text-4xl leading-none transition-colors ${isDark ? "text-white/10" : "text-slate-100"}`}>"</span>
+                 <p className="font-medium leading-relaxed">
+                   Most students learn the "What". Very few learn the <span className={isDark ? "text-white/50" : "text-slate-600"}>"How".</span>
+                 </p>
+               </div>
             </div>
-            {/* The tragic quote */}
-            <div className="bg-gray-100 p-6 text-[15px] italic text-gray-600 border-t border-gray-200 flex items-start gap-4 mx-4 mb-4 rounded-xl">
-              <div className="text-3xl font-serif text-gray-400 leading-none">"</div>
-              I know the code, but I don't know how to make a live app.
-            </div>
-          </motion.div>
+          </div>
 
-          {/* GradSkills Path (Cyan / Blue Elite Variant) */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.3 }}
-            className={`relative flex flex-col bg-white border ${isHome ? "border-[#8c52ff]/20" : "border-blue-200"} rounded-[32px] overflow-hidden shadow-md hover:shadow-lg hover:-translate-y-2 transition-all duration-500`}
+          {/* GradSkills Path */}
+          <div
+            className={`relative flex flex-col border rounded-3xl overflow-hidden transition-all duration-700 backdrop-blur-xl group/card ${isDark ? "bg-white/[0.03] border-white/10 shadow-[0_30px_60px_-15px_rgba(140,82,255,0.15)]" : "bg-slate-50 border-slate-200 shadow-[0_30px_60px_-15px_rgba(148,163,184,0.1)] hover:bg-white"}`}
           >
-            {/* Glowing Accent */}
-            <div className={`absolute top-0 inset-x-0 h-[3px] ${isHome ? "bg-home-gradient" : "bg-blue-800"}`} />
-
-            <div className="p-8 pb-0 flex items-center justify-between">
-              <div>
-                <h3 className={`text-[14px] font-bold uppercase tracking-widest ${isHome ? "text-[#8c52ff]" : "text-blue-800"} mb-2`}>The GradSkills Path</h3>
-                <h4 className="text-[28px] font-bold text-gray-900">Product Builder</h4>
+            {/* Top Highlight Line */}
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#8c52ff] to-transparent opacity-50" />
+            
+            <div className="p-10 pb-0">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h3 className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#8c52ff] mb-3">The Builder Path</h3>
+                  <h4 className={`text-[32px] font-bold tracking-tight leading-tight transition-colors ${isDark ? "text-white" : "text-slate-900"}`}>Product Engineering</h4>
+                </div>
+                <div className="w-16 h-16 rounded-2xl bg-home-gradient flex items-center justify-center shadow-[0_0_20px_rgba(140,82,255,0.3)]">
+                  <Rocket className="h-7 w-7 text-white" />
+                </div>
               </div>
-              <div className={`w-14 h-14 rounded-2xl ${isHome ? "bg-home-gradient" : "bg-blue-800"} flex flex-col items-center justify-center shadow-sm`}>
-                <Rocket className="h-6 w-6 text-white" />
+
+              <div className="space-y-8 mb-12">
+                {[
+                  { title: "Production Code", text: "Build and deploy real web, mobile, and AI applications from scratch." },
+                  { title: "Integrated Systems", text: "Learn how to connect AI agents with live databases and user interfaces." },
+                  { title: "Proof of Competence", text: "Showcase a portfolio of live, working products that recruiters can actually use." }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-5 group/item">
+                    <div className="mt-1 w-6 h-6 shrink-0 rounded-full bg-[#8c52ff]/20 flex items-center justify-center border border-[#8c52ff]/30 shadow-[0_0_10px_rgba(140,82,255,0.2)]">
+                      <CheckCircle className="w-4 h-4 text-[#8c52ff]" />
+                    </div>
+                    <div>
+                      <p className={`text-[16px] transition-colors leading-relaxed font-medium ${isDark ? "text-white/70 group-hover/item:text-white" : "text-slate-600 group-hover/item:text-slate-900"}`}>
+                        <strong className={`block mb-1 font-semibold transition-colors ${isDark ? "text-white" : "text-slate-900"}`}>{item.title}</strong> {item.text}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="p-8 flex-grow flex flex-col justify-start">
-              <ul className="flex flex-col gap-6">
-                <li className="flex gap-4 text-gray-800 font-semibold text-[16px]">
-                  <CheckCircle className={`w-6 h-6 shrink-0 ${isHome ? "text-[#8c52ff]" : "text-blue-800"}`} />
-                  <span>Learn Web, App and AI agent development.</span>
-                </li>
-                <li className="flex gap-4 text-gray-800 font-semibold text-[16px]">
-                  <CheckCircle className={`w-6 h-6 shrink-0 ${isHome ? "text-[#8c52ff]" : "text-blue-800"}`} />
-                  <span>Develop real Website, App and an AI Agent.</span>
-                </li>
-                <li className="flex gap-4 text-gray-800 font-semibold text-[16px]">
-                  <CheckCircle className={`w-6 h-6 shrink-0 ${isHome ? "text-[#8c52ff]" : "text-blue-800"}`} />
-                  <span>Launch the working application's on the Internet.</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* The power quote */}
-            <div className={`p-6 text-[15px] ${isHome ? "text-[#8c52ff]" : "text-blue-900"} border-t ${isHome ? "border-[#8c52ff]/10" : "border-blue-100"} flex items-center gap-4 ${isHome ? "bg-[#8c52ff]/5" : "bg-blue-50/50"}`}>
-              <ArrowRight className={`h-5 w-5 ${isHome ? "text-[#8c52ff]" : "text-blue-800"}`} />
-              <span className="font-bold tracking-wide">"Here is what I built, and here is a live link you can click."</span>
-            </div>
-          </motion.div>
+            <ApplicationFormModal>
+              <div className={`mt-auto p-10 border-t group-hover/card:bg-[#8c52ff]/5 transition-colors cursor-pointer ${isDark ? "bg-white/[0.02] border-white/10" : "bg-white border-slate-100"}`}>
+                <div className="flex items-center justify-between">
+                  <span className={`text-[15px] font-semibold tracking-tight transition-colors ${isDark ? "text-white" : "text-slate-900"}`}>
+                    Stop writing code. Start building products.
+                  </span>
+                  <ArrowRight className="h-5 w-5 text-[#8c52ff] group-hover/card:translate-x-2 transition-transform" />
+                </div>
+              </div>
+            </ApplicationFormModal>
+          </div>
 
         </div>
       </div>
